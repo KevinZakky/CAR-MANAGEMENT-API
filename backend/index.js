@@ -18,9 +18,9 @@ const sessionStore = SequelizeStore(session.Store);
 const store = new sessionStore({
   db: db,
 });
-(async () => {
-  await db.sync();
-})();
+// (async () => {
+//   await db.sync();
+// })();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -47,6 +47,6 @@ app.use(
 app.use(userRoute);
 app.use(carRoute);
 
-store.sync();
+// store.sync();
 
 app.listen(5000, () => console.log(`Server Up and Running...`));

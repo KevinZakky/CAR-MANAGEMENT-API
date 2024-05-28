@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize";
 
-const db = new Sequelize("jwt_token", "root", "", {
+const db = new Sequelize("crud_with_auth_db", "root", "", {
   host: "localhost",
   dialect: "mysql",
 });

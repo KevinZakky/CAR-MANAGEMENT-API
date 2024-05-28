@@ -1,11 +1,57 @@
 import path from "path";
 import fs from "fs";
+import { Op } from "sequelize";
 import Car from "../models/carModel.js";
+import Users from "../models/userModel.js";
 
 export const getCars = async (req, res) => {
   try {
-    const response = await Car.findAll();
-    // res.render("list_cars", { cars: cars });
+    const cars = await Car.findAll({
+      // where: {
+      //   is_deleted: {
+      //     [Op.ne]: 1,
+      //   },
+      // },
+      include: [
+        {
+          model: Users,
+          as: "CreatedBy",
+          attributes: ["uuid", "name", "email", "role"],
+        },
+        {
+          model: Users,
+          as: "UpdatedBy",
+          attributes: ["uuid", "name", "email", "role"],
+        },
+        {
+          model: Users,
+          as: "DeletedBy",
+          attributes: ["uuid", "name", "email", "role"],
+        },
+      ],
+    });
+
+    const response = cars.map((car) => {
+      const {
+        CreatedBy,
+        UpdatedBy,
+        DeletedBy,
+        createdBy,
+        updatedBy,
+        deletedBy,
+        ...carData
+      } = car.toJSON();
+      return {
+        ...carData,
+        createdBy: createdBy,
+        CreatedBy: CreatedBy,
+        updatedBy: updatedBy,
+        UpdatedBy: updatedBy ? UpdatedBy : null,
+        deletedBy: deletedBy,
+        DeletedBy: deletedBy ? DeletedBy : null,
+      };
+    });
+
     res.status(200).json(response);
   } catch (error) {
     console.log(error.message);
@@ -14,12 +60,53 @@ export const getCars = async (req, res) => {
 
 export const getCarById = async (req, res) => {
   try {
-    const response = await Car.findOne({
+    const car = await Car.findOne({
       where: {
         id: req.params.id,
+        // is_deleted: {
+        //   [Op.ne]: 1,
+        // },
       },
+      include: [
+        {
+          model: Users,
+          as: "CreatedBy",
+          attributes: ["uuid", "name", "email", "role"],
+        },
+        {
+          model: Users,
+          as: "UpdatedBy",
+          attributes: ["uuid", "name", "email", "role"],
+        },
+        {
+          model: Users,
+          as: "DeletedBy",
+          attributes: ["uuid", "name", "email", "role"],
+        },
+      ],
     });
-    // res.render("update_cars", { car: car });
+
+    if (!car) return res.status(404).json({ msg: "Car not found" });
+
+    const {
+      CreatedBy,
+      UpdatedBy,
+      DeletedBy,
+      createdBy,
+      updatedBy,
+      deletedBy,
+      ...carData
+    } = car.toJSON();
+
+    const response = {
+      ...carData,
+      createdBy: createdBy,
+      CreatedBy: CreatedBy,
+      updatedBy: updatedBy,
+      UpdatedBy: UpdatedBy,
+      deletedBy: deletedBy,
+      DeletedBy: DeletedBy,
+    };
     res.status(200).json(response);
   } catch (error) {
     console.log(error.message);
@@ -52,6 +139,7 @@ export const addCar = (req, res) => {
         image: fileName,
         url: url,
         userId: req.userId,
+        createdBy: req.userId,
       });
       res.status(201).json({ msg: "Car Created Successfully" });
     } catch (error) {
@@ -98,6 +186,7 @@ export const updateCar = async (req, res) => {
         rentPerDay: rentPerDay,
         image: fileName,
         url: url,
+        updatedBy: req.userId,
       },
       {
         where: {
@@ -125,11 +214,17 @@ export const deleteCar = async (req, res) => {
     if (fs.existsSync(filePath) && car.image) {
       fs.unlinkSync(filePath);
     }
-    await Car.destroy({
-      where: {
-        id: req.params.id,
+    await Car.update(
+      {
+        deletedBy: req.userId,
+        is_deleted: 1,
       },
-    });
+      {
+        where: {
+          id: req.params.id,
+        },
+      }
+    );
     res.status(200).json({ msg: "Car deleted successfully" });
 
     // res.redirect("/cars");
