@@ -9,16 +9,14 @@ export const Register = async (req, res) => {
       .status(400)
       .json({ msg: "Password dan Confirm password tidak cocok" });
 
-  // const currentUser = await Users.findOne({
-  //   where: {
-  //     uuid: req.session.userId,
-  //   },
-  // });
+  const emailExisted = await Users.findOne({
+    where: {
+      email: req.body.email,
+    },
+  });
 
-  // if (role === "admin" && currentUser.role !== "superadmin")
-  //   return res.status(403).json({
-  //     msg: "Access Ditolak: Hanya superadmin yang dapat menambahkan akun admin",
-  //   });
+  if (emailExisted)
+    return res.status(400).json({ msg: "Email sudah terdaftar" });
 
   const salt = await bcrypt.genSalt();
   const hashPassword = await bcrypt.hash(password, salt);
