@@ -2,8 +2,8 @@
 
 ## Description
 
-Repository ini berisi API LOGIN dengan beberapa role : superadmin, admin, member. 
-Pada api CRUD Cars, hanya dapat dilakukan oleh role admin dan superadmin, member hanya dapat melihat data mobil
+Repository ini berisi API LOGIN dengan beberapa role : superadmin, admin, member. <br>
+Pada api CRUD Cars, hanya dapat dilakukan oleh role admin dan superadmin, member hanya dapat melihat data mobil.
 
 ## Installation
 
