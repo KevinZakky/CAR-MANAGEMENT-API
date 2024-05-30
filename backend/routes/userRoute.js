@@ -1,14 +1,20 @@
 import express from "express";
-import { Register, Login, Logout } from "../controllers/authController.js";
+import {
+  Register,
+  Login,
+  Logout,
+  RegisterMember,
+} from "../controllers/authController.js";
 import { getUsers, deleteUsers } from "../controllers/userController.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 import { refreshToken } from "../controllers/refreshToken.js";
-import { Me, verifySuperAdmin, verifyUser } from "../middleware/AuthUser.js";
+import { Me } from "../middleware/AuthUser.js";
 
 const router = express.Router();
 
 router.get("/users", verifyToken, getUsers);
-router.post("/users", Register);
+router.post("/users", verifyToken, Register);
+router.post("/member", RegisterMember);
 router.get("/me", Me);
 router.post("/login", Login);
 router.delete("/logout", Logout);

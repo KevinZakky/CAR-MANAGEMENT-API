@@ -3,11 +3,15 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export const Register = async (req, res) => {
+  const tokenCredential = req.user;
+  if (tokenCredential.role === "member")
+    return res.status(403).json({ msg: "Only the superadmin can add admin" });
+
   const { name, email, password, confPassword, role } = req.body;
   if (password !== confPassword)
     return res
       .status(400)
-      .json({ msg: "Password dan Confirm password tidak cocok" });
+      .json({ msg: "Password and confirmation password do not match" });
 
   const emailExisted = await Users.findOne({
     where: {
@@ -16,7 +20,7 @@ export const Register = async (req, res) => {
   });
 
   if (emailExisted)
-    return res.status(400).json({ msg: "Email sudah terdaftar" });
+    return res.status(400).json({ msg: "Email already registered" });
 
   const salt = await bcrypt.genSalt();
   const hashPassword = await bcrypt.hash(password, salt);
@@ -25,9 +29,40 @@ export const Register = async (req, res) => {
       name: name,
       email: email,
       password: hashPassword,
-      role: role,
+      role: "admin",
     });
-    res.json({ msg: "Register berhasil" });
+    res.json({ msg: "Register successfully" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const RegisterMember = async (req, res) => {
+  const { name, email, password, confPassword, role } = req.body;
+  if (password !== confPassword)
+    return res
+      .status(400)
+      .json({ msg: "Password and confirmation password do not match" });
+
+  const emailExisted = await Users.findOne({
+    where: {
+      email: req.body.email,
+    },
+  });
+
+  if (emailExisted)
+    return res.status(400).json({ msg: "Email already registered" });
+
+  const salt = await bcrypt.genSalt();
+  const hashPassword = await bcrypt.hash(password, salt);
+  try {
+    await Users.create({
+      name: name,
+      email: email,
+      password: hashPassword,
+      role: "member",
+    });
+    res.json({ msg: "Register successfully" });
   } catch (error) {
     console.log(error);
   }
@@ -40,7 +75,7 @@ export const Login = async (req, res) => {
         email: req.body.email,
       },
     });
-    if (!user) return res.status(404).json({ msg: "Email tidak ditemukan" });
+    if (!user) return res.status(404).json({ msg: "Email not found" });
 
     const match = await bcrypt.compare(req.body.password, user[0].password);
     if (!match) return res.status(400).json({ msg: "Wrong password" });
@@ -79,7 +114,7 @@ export const Login = async (req, res) => {
 
 export const Logout = async (req, res) => {
   req.session.destroy((err) => {
-    if (err) return res.status(400).json({ msg: "Tidak dapat logout" });
-    res.status(200).json({ msg: "Anda telah logout" });
+    if (err) return res.status(400).json({ msg: "Cannot logout" });
+    res.status(200).json({ msg: "You already log out" });
   });
 };
