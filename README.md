@@ -250,7 +250,7 @@ This project is an api for car management and user authentication, there are 3 r
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/KevinZakky/CAR-MANAGEMENT.API.git
+    git clone https://github.com/KevinZakky/CAR-MANAGEMENT-API.git
     ```
 
 2. Install dependencies:
