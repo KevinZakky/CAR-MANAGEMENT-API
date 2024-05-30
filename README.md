@@ -10,4 +10,4 @@ Steps to set up the project locally:
 
 1. **Clone the repository**:
    ```sh
-   git clone https://github.com/yourusername/your-repo-name.git
+   git clone https://github.com/KevinZakky/CAR-MANAGEMENT-API.git
