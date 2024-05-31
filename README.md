@@ -8,6 +8,10 @@ This project is an api for car management and user authentication, there are 3 r
 
 ### Car Routes
 
+- **AKUN SUPERADMIN**
+  - Email : superadmin@gmail.com
+  - pass  : 1234
+
 - **GET /cars**
   - Description: Retrieve all cars.
   - Response Example:
