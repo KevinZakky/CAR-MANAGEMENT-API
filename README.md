@@ -4,9 +4,7 @@
 
 This project is an api for car management and user authentication, there are 3 roles, such as member, admin, and superadmin. Create, update and delete cars can only be done by accounts that have admin and superadmin roles, members can only view car data. In the admin registration process, only superadmins can add accounts with the admin role.
 
-## Endpoints
 
-### Car Routes
 - **POSTMAN API**
 - https://documenter.getpostman.com/view/29788989/2sA3QtfC1i
 
@@ -14,6 +12,9 @@ This project is an api for car management and user authentication, there are 3 r
   - Email : superadmin@gmail.com
   - pass  : 1234
 
+## Endpoints
+
+### Car Routes
 - **GET /cars**
   - Description: Retrieve all cars.
   - Response Example:
