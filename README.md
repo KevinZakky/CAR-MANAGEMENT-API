@@ -8,7 +8,7 @@ This project is an api for car management and user authentication, there are 3 r
 
 ### Car Routes
 
-- **AKUN SUPERADMIN**
+- **SUPERADMIN ACCOUNT**
   - Email : superadmin@gmail.com
   - pass  : 1234
 
