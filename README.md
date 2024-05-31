@@ -7,6 +7,8 @@ This project is an api for car management and user authentication, there are 3 r
 ## Endpoints
 
 ### Car Routes
+- **POSTMAN API**
+- https://documenter.getpostman.com/view/29788989/2sA3QtfC1i
 
 - **SUPERADMIN ACCOUNT**
   - Email : superadmin@gmail.com
